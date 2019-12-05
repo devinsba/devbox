@@ -1,0 +1,6 @@
+- hosts: local
+  roles:
+    - nvm
+    - pyenv
+    - rvm
+    - sdkman

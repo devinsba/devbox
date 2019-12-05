@@ -1,0 +1,12 @@
+---
+- stat:
+    path: "{{ lookup('env','HOME') }}/.local/opt/pyenv"
+  register: PYENV_ROOT
+
+- git:
+    repo: https://github.com/pyenv/pyenv.git
+    dest: "{{ lookup('env','HOME') }}/.local/opt/pyenv"
+  when: PYENV_ROOT.stat.exists == false
+
+- shell: |
+    {{ lookup('env','HOME') }}/.local/opt/pyenv/bin/pyenv init -

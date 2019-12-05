@@ -1,0 +1,3 @@
+alias gs="git status"
+alias gfrp="git fetch && git rebase && git push"
+alias gbc="hub sync && hub sync > /dev/null 2>&1 | cut -d ' ' -f 2 | xargs git branch -D"

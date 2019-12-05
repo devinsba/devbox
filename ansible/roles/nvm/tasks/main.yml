@@ -1,0 +1,13 @@
+---
+- stat:
+    path: "{{ lookup('env','HOME') }}/.local/opt/nvm"
+  register: NVM_DIR
+
+- git:
+    repo: https://github.com/nvm-sh/nvm.git
+    dest: "{{ lookup('env','HOME') }}/.local/opt/nvm"
+  when: NVM_DIR.stat.exists == false
+
+- shell: |
+    cd {{ lookup('env','HOME') }}/.local/opt/nvm
+    git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`

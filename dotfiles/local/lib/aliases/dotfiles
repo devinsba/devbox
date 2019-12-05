@@ -1,0 +1,10 @@
+alias cddf="cd $DOTFILES_DIR"
+
+function dfup() {
+    (
+        cd $DOTFILES_DIR
+        git pull
+        antibody update
+        update_antibody_plugin_cache
+    )
+}

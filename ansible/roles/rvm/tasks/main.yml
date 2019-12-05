@@ -1,0 +1,15 @@
+---
+- lineinfile:
+    path: "{{ lookup('env','HOME') }}/.rvmrc"
+    create: yes
+    regexp: '^rvm_path='
+    line: 'rvm_path="${HOME}/.local/opt/rvm"'
+
+- stat:
+    path: "{{ lookup('env','HOME') }}/.local/opt/rvm"
+  register: RVM_DIR
+
+- shell: |
+    export rvm_path="${HOME}/.local/opt/rvm"
+    curl -sSL https://get.rvm.io | bash -s stable --ignore-dotfiles
+  when: RVM_DIR.stat.exists == false
