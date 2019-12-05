@@ -41,7 +41,7 @@ function macos() {
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
 
-  brew install ansible
+  brew install git ansible
 }
 
 function debian() {
