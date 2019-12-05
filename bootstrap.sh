@@ -1,5 +1,5 @@
 #!/bin/sh
-DEVBOX_REPO=git@github.com:devinsba/devbox
+DEVBOX_REPO="git@github.com:devinsba/devbox"
 
 function get_linux_distro() {
   if [ -f /etc/os-release ]; then
@@ -64,3 +64,25 @@ Linux)
   esac
   ;;
 esac
+
+# Clone repo
+mkdir -p "${HOME}/.local/opt"
+if [ --d "${HOME}/.local/opt/devbox" ]; then
+  (
+    cd "${HOME}/.local/opt/devbox"
+    git pull
+  )
+else
+  git clone "${DEVBOX_REPO}" "${HOME}/.local/opt/devbox"
+fi
+
+(
+  cd "${HOME}/.local/opt/devbox/ansible"
+  ansible-playbook -K -i inventory site.yml
+)
+
+# rcm
+echo "DOTFILES_DIRS=\"${HOME}/.local/opt/devbox/dotfiles\"" > "${HOME}/.rcrc"
+echo "TAGS=\"$(uname)\"" >> "${HOME}/.rcrc"
+rcup -vf
+mkrc -B $(hostname) "${HOME}/.rcrc"

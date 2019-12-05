@@ -1,0 +1,20 @@
+---
+- homebrew:
+    name: zsh
+
+- lineinfile:
+    path: /etc/shells
+    line: /usr/local/bin/zsh
+  become: true
+
+- homebrew_tap:
+    name: thoughtbot/formulae
+
+- homebrew:
+    name: rcm
+
+- homebrew:
+    name: antibody
+
+- homebrew_cask:
+    name: iterm2

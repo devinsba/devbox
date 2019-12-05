@@ -1,6 +1,8 @@
 - hosts: local
   roles:
-    - nvm
-    - pyenv
-    - rvm
-    - sdkman
+    - role: osx
+      when: ansible_facts['os_family'] == 'Darwin'
+    - role: nvm
+    - role: pyenv
+    - role: rvm
+    - role: sdkman
