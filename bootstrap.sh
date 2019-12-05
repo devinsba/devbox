@@ -67,7 +67,7 @@ esac
 
 # Clone repo
 mkdir -p "${HOME}/.local/opt"
-if [ --d "${HOME}/.local/opt/devbox" ]; then
+if [ -d "${HOME}/.local/opt/devbox" ]; then
   (
     cd "${HOME}/.local/opt/devbox"
     git pull
@@ -85,4 +85,3 @@ fi
 echo "DOTFILES_DIRS=\"${HOME}/.local/opt/devbox/dotfiles\"" > "${HOME}/.rcrc"
 echo "TAGS=\"$(uname)\"" >> "${HOME}/.rcrc"
 rcup -vf
-mkrc -B $(hostname) "${HOME}/.rcrc"
