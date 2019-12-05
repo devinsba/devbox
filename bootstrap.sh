@@ -1,0 +1,66 @@
+#!/bin/sh
+DEVBOX_REPO=git@github.com:devinsba/devbox
+
+function get_linux_distro() {
+  if [ -f /etc/os-release ]; then
+    # freedesktop.org and systemd
+    . /etc/os-release
+    echo $NAME
+  elif type lsb_release >/dev/null 2>&1; then
+    # linuxbase.org
+    lsb_release -si
+  elif [ -f /etc/lsb-release ]; then
+    # For some versions of Debian/Ubuntu without lsb_release command
+    . /etc/lsb-release
+    echo $DISTRIB_ID
+  elif [ -f /etc/debian_version ]; then
+    # Older Debian/Ubuntu/etc.
+    echo "Debian"
+  else
+    # Fall back to uname, e.g. "Linux", also works for BSD, etc.
+    uname -s
+  fi
+}
+
+function macos() {
+  if ! xcode-select -p > /dev/null 2>&1; then
+    xcode-select --install
+  fi
+
+  while ! xcode-select -p > /dev/null 2>&1
+  do
+    sleep 10
+  done
+
+  if ! xcode-select -p > /dev/null 2>&1; then
+    echo "xcode command line tools not installed"
+    exit 1
+  fi
+
+  if ! brew commands > /dev/null 2>&1; then
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  fi
+
+  brew install ansible
+}
+
+function debian() {
+  sudo apt-get update
+  sudo apt-get upgrade -y
+  sudo apt-get install -y git ansible
+}
+
+sudo -v
+
+case $(uname) in
+Darwin)
+  macos
+  ;;
+Linux)
+  case $(get_linux_distro) in
+  Debian)
+    debian
+    ;;
+  esac
+  ;;
+esac
