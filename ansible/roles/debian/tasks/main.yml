@@ -10,3 +10,15 @@
     - zsh
     - gnupg2
     - rcm
+
+- name: Install antibody
+  apt:
+    deb: https://github.com/getantibody/antibody/releases/download/v6.0.1/antibody_6.0.1_linux_amd64.deb
+  become: true
+
+- user:
+    name: "{{ ansible_facts.user_id }}"
+    create_home: no
+    shell: /usr/bin/zsh
+    update_password: on_create
+  become: true
