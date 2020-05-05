@@ -2,6 +2,8 @@
   roles:
     - role: osx
       when: ansible_facts['os_family'] == 'Darwin'
+    - role: debian
+      when: ansible_facts['os_family'] == 'Debian'
     - role: nvm
     - role: pyenv
     - role: rvm
