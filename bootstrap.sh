@@ -1,5 +1,5 @@
 #!/bin/sh
-DEVBOX_REPO="git@github.com:devinsba/devbox"
+DEVBOX_REPO="http://github.com/devinsba/devbox"
 
 function get_linux_distro() {
   if [ -f /etc/os-release ]; then

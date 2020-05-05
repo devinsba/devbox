@@ -3,7 +3,7 @@ export XDG_CONFIG_HOME="${HOME}/.config"
 export DOTFILES_DIR="${HOME}/.local/opt/dotfiles"
 
 autoload -Uz compinit
-if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump) ]; then
+if [ $(date +'%j') != $(date +'%j' -r ~/.zcompdump) ]; then
     compinit -i
 else
     compinit -C -i
