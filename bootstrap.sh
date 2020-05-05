@@ -1,5 +1,6 @@
 #!/bin/sh
-DEVBOX_REPO="http://github.com/devinsba/devbox"
+DEVBOX_REPO="git@github.com:devinsba/devbox"
+LASTPASS_EMAIL_ADDRESS="badevins@gmail.com"
 
 function get_linux_distro() {
   if [ -f /etc/os-release ]; then
@@ -41,13 +42,13 @@ function macos() {
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
   fi
 
-  brew install git ansible
+  brew install git ansible lastpass-cli
 }
 
 function debian() {
   sudo apt-get update
   sudo apt-get upgrade -y
-  sudo apt-get install -y git ansible
+  sudo apt-get install -y git ansible lastpass-cli
 }
 
 sudo -v
@@ -64,6 +65,11 @@ Linux)
   esac
   ;;
 esac
+
+lpass login "${LASTPASS_EMAIL_ADDRESS}"
+mkdir -p "${HOME}/.ssh"
+lpass show --field="Private Key" ssh@personal > "${HOME}/.ssh/id_rsa" && chmod 600 "${HOME}/.ssh/id_rsa"
+lpass show --field="Public Key" ssh@personal > "${HOME}/.ssh/id_rsa.pub"
 
 # Clone repo
 mkdir -p "${HOME}/.local/opt"
