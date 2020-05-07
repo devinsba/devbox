@@ -60,6 +60,7 @@ Darwin)
 Linux)
   case $(get_linux_distro) in
   Debian)
+  Ubuntu)
     debian
     ;;
   esac
