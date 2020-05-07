@@ -61,8 +61,7 @@ Darwin)
 Linux)
   echo $(get_linux_distro)
   case $(get_linux_distro) in
-  Debian)
-  Ubuntu)
+  Debian | Ubuntu)
     debian
     ;;
   esac
