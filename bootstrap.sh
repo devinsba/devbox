@@ -53,11 +53,13 @@ function debian() {
 
 sudo -v
 
+echo $(uname)
 case $(uname) in
 Darwin)
   macos
   ;;
 Linux)
+  echo $(get_linux_distro)
   case $(get_linux_distro) in
   Debian)
   Ubuntu)
