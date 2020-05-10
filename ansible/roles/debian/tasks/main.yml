@@ -1,15 +1,13 @@
 ---
-- apt_repository:
-    repo: deb https://apt.thoughtbot.com/debian/ stable main
-    filename: thoughtbot
-    state: present
-
 - name: Install a list of packages
   apt:
     pkg:
     - zsh
     - gnupg2
     - rcm
+    - unzip
+    - zip
+  become: true
 
 - name: Install antibody
   apt:
