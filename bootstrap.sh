@@ -53,13 +53,11 @@ function debian() {
 
 sudo -v
 
-echo $(uname)
 case $(uname) in
 Darwin)
   macos
   ;;
 Linux)
-  echo $(get_linux_distro)
   case $(get_linux_distro) in
   Debian | Ubuntu)
     debian
@@ -68,7 +66,9 @@ Linux)
   ;;
 esac
 
-lpass login "${LASTPASS_EMAIL_ADDRESS}"
+if ! lpass status | grep 'Logged in' > /dev/null; then
+  LPASS_DISABLE_PINENTRY=true lpass login --trust "${LASTPASS_EMAIL_ADDRESS}"
+fi
 mkdir -p "${HOME}/.ssh"
 lpass show --field="Private Key" ssh@personal > "${HOME}/.ssh/id_rsa" && chmod 600 "${HOME}/.ssh/id_rsa"
 lpass show --field="Public Key" ssh@personal > "${HOME}/.ssh/id_rsa.pub"
