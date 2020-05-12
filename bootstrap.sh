@@ -2,7 +2,20 @@
 DEVBOX_REPO="git@github.com:devinsba/devbox"
 LASTPASS_EMAIL_ADDRESS="badevins@gmail.com"
 
-function get_linux_distro() {
+cat << EOF > /tmp/lpass_askpass
+#!/bin/bash
+
+echo -n "Enter \$@: " >/dev/stderr
+
+stty -echo
+read answer
+stty echo
+echo \$answer
+EOF
+chmod u+x /tmp/lpass_askpass
+export LPASS_ASKPASS=/tmp/lpass_askpass
+
+get_linux_distro() {
   if [ -f /etc/os-release ]; then
     # freedesktop.org and systemd
     . /etc/os-release
@@ -23,7 +36,7 @@ function get_linux_distro() {
   fi
 }
 
-function macos() {
+macos() {
   if ! xcode-select -p > /dev/null 2>&1; then
     xcode-select --install
   fi
@@ -67,7 +80,7 @@ Linux)
 esac
 
 if ! lpass status | grep 'Logged in' > /dev/null; then
-  LPASS_DISABLE_PINENTRY=true lpass login --trust "${LASTPASS_EMAIL_ADDRESS}"
+  lpass login --trust "${LASTPASS_EMAIL_ADDRESS}"
 fi
 mkdir -p "${HOME}/.ssh"
 lpass show --field="Private Key" ssh@personal > "${HOME}/.ssh/personal_key" && chmod 600 "${HOME}/.ssh/personal_key"
