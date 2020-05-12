@@ -4,10 +4,10 @@
   register: SDKMAN_DIR
 
 - shell: |
-    curl -s -o /tmp/sdkman.sh "https://get.sdkman.io"
+    curl -s -o /tmp/sdkman.sh "https://get.sdkman.io?rcupdate=false"
     chmod u+x /tmp/sdkman.sh
     export SDKMAN_DIR="{{ lookup('env','HOME') }}/.local/opt/sdkman"
-    HOME=/tmp/sdkman /tmp/sdkman.sh
+    /tmp/sdkman.sh
   args:
     executable: /bin/bash
   when: SDKMAN_DIR.stat.exists == false

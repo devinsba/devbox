@@ -70,8 +70,8 @@ if ! lpass status | grep 'Logged in' > /dev/null; then
   LPASS_DISABLE_PINENTRY=true lpass login --trust "${LASTPASS_EMAIL_ADDRESS}"
 fi
 mkdir -p "${HOME}/.ssh"
-lpass show --field="Private Key" ssh@personal > "${HOME}/.ssh/id_rsa" && chmod 600 "${HOME}/.ssh/id_rsa"
-lpass show --field="Public Key" ssh@personal > "${HOME}/.ssh/id_rsa.pub"
+lpass show --field="Private Key" ssh@personal > "${HOME}/.ssh/personal_key" && chmod 600 "${HOME}/.ssh/personal_key"
+lpass show --field="Public Key" ssh@personal > "${HOME}/.ssh/personal_key.pub"
 
 # Clone repo
 mkdir -p "${HOME}/.local/opt"
