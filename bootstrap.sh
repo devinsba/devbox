@@ -5,7 +5,7 @@ LASTPASS_EMAIL_ADDRESS="badevins@gmail.com"
 cat << EOF > /tmp/lpass_askpass
 #!/bin/bash
 
-echo -n "Enter \$@: " >/dev/stderr
+echo -n "Enter \$@: " > /dev/stderr
 
 stty -echo
 read answer
@@ -86,7 +86,13 @@ mkdir -p "${HOME}/.ssh"
 lpass show --field="Private Key" ssh@personal > "${HOME}/.ssh/personal_key" && chmod 600 "${HOME}/.ssh/personal_key"
 lpass show --field="Public Key" ssh@personal > "${HOME}/.ssh/personal_key.pub"
 
-# Clone repo
+cat << EOF > $HOME/.ssh/config
+host github.com
+  HostName github.com
+  IdentityFile ~/.ssh/personal_key
+EOF
+
+# Clone repos
 mkdir -p "${HOME}/.local/opt"
 if [ -d "${HOME}/.local/opt/devbox" ]; then
   (
@@ -96,6 +102,14 @@ if [ -d "${HOME}/.local/opt/devbox" ]; then
 else
   git clone "${DEVBOX_REPO}" "${HOME}/.local/opt/devbox"
 fi
+if [ -d "${HOME}/.local/opt/devbox-private" ]; then
+  (
+    cd "${HOME}/.local/opt/devbox-private"
+    git pull
+  )
+else
+  git clone "${DEVBOX_REPO}-private" "${HOME}/.local/opt/devbox-private"
+fi
 
 (
   cd "${HOME}/.local/opt/devbox/ansible"
@@ -103,6 +117,6 @@ fi
 )
 
 # rcm
-echo "DOTFILES_DIRS=\"${HOME}/.local/opt/devbox/dotfiles\"" > "${HOME}/.rcrc"
+echo "DOTFILES_DIRS=\"${HOME}/.local/opt/devbox/dotfiles ${HOME}/.local/opt/devbox-private/dotfiles\"" > "${HOME}/.rcrc"
 echo "TAGS=\"$(uname)\"" >> "${HOME}/.rcrc"
 rcup -vf

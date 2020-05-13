@@ -3,6 +3,10 @@ export XDG_CONFIG_HOME="${HOME}/.config"
 export DOTFILES_DIR="${HOME}/.local/opt/devbox/dotfiles"
 
 autoload -Uz compinit
+DATE_CMD=date
+if [ $(which gdate) ]; then
+    DATE_CMD=gdate
+fi
 if [ $(date +'%j') != $(date +'%j' -r ~/.zcompdump) ]; then
     compinit -i
 else
@@ -28,3 +32,7 @@ fi
 export PATH="${HOME}/.local/bin:${PATH}"
 
 [ -s "${HOME}/.config/fzf/init.zsh" ] && source ${HOME}/.config/fzf/init.zsh
+
+if [[ -s "${HOME}/.zshrc_private" ]]; then
+    source "${HOME}/.zshrc_private"
+fi
