@@ -7,7 +7,7 @@ DATE_CMD=date
 if [ $(which gdate) ]; then
     DATE_CMD=gdate
 fi
-if [ $(date +'%j') != $(date +'%j' -r ~/.zcompdump) ]; then
+if [ $($DATE_CMD +'%j') != $($DATE_CMD +'%j' -r ~/.zcompdump) ]; then
     compinit -i
 else
     compinit -C -i
