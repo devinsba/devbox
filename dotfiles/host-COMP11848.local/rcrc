@@ -1,2 +1,2 @@
-DOTFILES_DIRS="/Users/brian.devinssuresh/.local/opt/dotfiles"
+DOTFILES_DIRS="/Users/brian.devinssuresh/.local/opt/devbox/dotfiles /Users/brian.devinssuresh/.local/opt/devbox-private/dotfiles"
 TAGS="Darwin"
