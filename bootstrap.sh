@@ -63,6 +63,7 @@ function debian() {
 }
 
 sudo -v
+sudo chsh -s $(which zsh) ${USER}
 
 case $(uname) in
 Darwin)
