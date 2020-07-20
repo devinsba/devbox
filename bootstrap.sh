@@ -7,9 +7,7 @@ cat << EOF > /tmp/lpass_askpass
 
 echo -n "Enter \$@: " > /dev/stderr
 
-stty -echo
-read answer
-stty echo
+read -s answer
 echo \$answer
 EOF
 chmod u+x /tmp/lpass_askpass
