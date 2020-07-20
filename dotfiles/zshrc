@@ -4,7 +4,7 @@ export DOTFILES_DIR="${HOME}/.local/opt/devbox/dotfiles"
 
 autoload -Uz compinit
 DATE_CMD=date
-if [ $(which gdate) ]; then
+if type gdate >/dev/null 2>&1; then
     DATE_CMD=gdate
 fi
 if [ $($DATE_CMD +'%j') != $($DATE_CMD +'%j' -r ~/.zcompdump) ]; then
