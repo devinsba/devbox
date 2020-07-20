@@ -78,6 +78,7 @@ Linux)
 esac
 
 if ! lpass status | grep 'Logged in' > /dev/null; then
+  mkdir -p "${HOME}/.local/share/lpass"
   lpass login --trust "${LASTPASS_EMAIL_ADDRESS}"
 fi
 mkdir -p "${HOME}/.ssh"
