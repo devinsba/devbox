@@ -30,6 +30,7 @@ else
 fi
 
 export PATH="${HOME}/.local/bin:${PATH}"
+[ -d "/snap/bin" ] && export PATH="${PATH}:/snap/bin"
 
 [ -s "${HOME}/.config/fzf/init.zsh" ] && source ${HOME}/.config/fzf/init.zsh
 
