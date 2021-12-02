@@ -37,3 +37,4 @@ export PATH="${HOME}/.local/bin:${PATH}"
 if [[ -s "${HOME}/.zshrc_private" ]]; then
     source "${HOME}/.zshrc_private"
 fi
+
