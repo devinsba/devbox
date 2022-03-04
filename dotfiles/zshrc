@@ -38,3 +38,6 @@ if [[ -s "${HOME}/.zshrc_private" ]]; then
     source "${HOME}/.zshrc_private"
 fi
 
+if [[ -s "${HOME}/.zshrc_local" ]]; then
+    source "${HOME}/.zshrc_local"
+fi

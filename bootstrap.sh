@@ -68,8 +68,6 @@ Linux)
   ;;
 esac
 
-sudo chsh -s $(which zsh) ${USER}
-
 if ! lpass status | grep 'Logged in' > /dev/null; then
   cat << EOF > /tmp/lpass_askpass
 #!/bin/bash
