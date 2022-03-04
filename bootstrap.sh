@@ -1,17 +1,8 @@
 #!/bin/sh
+set -o xtrace
+
 DEVBOX_REPO="git@github.com:devinsba/devbox"
 LASTPASS_EMAIL_ADDRESS="badevins@gmail.com"
-
-cat << EOF > /tmp/lpass_askpass
-#!/bin/bash
-
-echo -n "Enter \$@: " > /dev/stderr
-
-read -s answer
-echo \$answer
-EOF
-chmod u+x /tmp/lpass_askpass
-export LPASS_ASKPASS=/tmp/lpass_askpass
 
 get_linux_distro() {
   if [ -f /etc/os-release ]; then
@@ -56,14 +47,13 @@ macos() {
   brew install git ansible lastpass-cli
 }
 
-function debian() {
+debian() {
   sudo apt-get update
   sudo apt-get upgrade -y
-  sudo apt-get install -y git ansible lastpass-cli
+  sudo apt-get install -y zsh git ansible lastpass-cli
 }
 
 sudo -v
-sudo chsh -s $(which zsh) ${USER}
 
 case $(uname) in
 Darwin)
@@ -71,14 +61,28 @@ Darwin)
   ;;
 Linux)
   case $(get_linux_distro) in
-  Debian | Ubuntu)
+  Debian | Ubuntu | "Pop!_OS")
     debian
     ;;
   esac
   ;;
 esac
 
+sudo chsh -s $(which zsh) ${USER}
+
 if ! lpass status | grep 'Logged in' > /dev/null; then
+  cat << EOF > /tmp/lpass_askpass
+#!/bin/bash
+
+echo -n "Enter \$@: " > /dev/stderr
+
+read -s answer
+echo \$answer
+EOF
+
+  chmod u+x /tmp/lpass_askpass
+  export LPASS_ASKPASS=/tmp/lpass_askpass
+
   mkdir -p "${HOME}/.local/share/lpass"
   lpass login --trust "${LASTPASS_EMAIL_ADDRESS}"
 fi
@@ -120,3 +124,5 @@ fi
 echo "DOTFILES_DIRS=\"${HOME}/.local/opt/devbox/dotfiles ${HOME}/.local/opt/devbox-private/dotfiles\"" > "${HOME}/.rcrc"
 echo "TAGS=\"$(uname)\"" >> "${HOME}/.rcrc"
 rcup -vf
+
+set +o xtrace
