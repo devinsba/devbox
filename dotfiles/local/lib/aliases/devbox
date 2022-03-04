@@ -1,0 +1,8 @@
+function boxup() {
+    (
+        cd $DEVBOX_DIR
+        git pull
+        cd $PRIVATE_DEVBOX_DIR
+        git pull
+    )
+}
