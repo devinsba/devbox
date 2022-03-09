@@ -7,11 +7,13 @@
     - rcm
     - unzip
     - zip
+    - hub
+    - neovim
   become: true
 
 - name: Install antibody
   apt:
-    deb: https://github.com/getantibody/antibody/releases/download/v6.0.1/antibody_6.0.1_linux_amd64.deb
+    deb: https://github.com/getantibody/antibody/releases/download/v6.1.1/antibody_6.1.1_linux_amd64.deb
   become: true
 
 - user:

@@ -50,7 +50,7 @@ macos() {
 debian() {
   sudo apt-get update
   sudo apt-get upgrade -y
-  sudo apt-get install -y zsh git ansible lastpass-cli
+  sudo apt-get install -y git ansible lastpass-cli
 }
 
 sudo -v

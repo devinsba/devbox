@@ -23,5 +23,11 @@
 - homebrew:
     name: antibody
 
+- homebrew:
+    name: hub
+
+- homebrew:
+    name: neovim
+
 - homebrew_cask:
     name: iterm2

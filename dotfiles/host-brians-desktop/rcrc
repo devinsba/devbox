@@ -1,2 +1,2 @@
-DOTFILES_DIRS="/home/brian/.local/share/dotfiles"
-TAGS="Linux"
+DOTFILES_DIRS="/home/brian/.local/opt/devbox/dotfiles /home/brian/.local/opt/devbox-private/dotfiles"
+TAGS="Linux Ubuntu"

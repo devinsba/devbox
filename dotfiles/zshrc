@@ -4,6 +4,8 @@ export DEVBOX_DIR="${HOME}/.local/opt/devbox"
 export PRIVATE_DEVBOX_DIR="${HOME}/.local/opt/devbox-private"
 export DOTFILES_DIR="${HOME}/.local/opt/devbox/dotfiles"
 
+export EDITOR=nvim
+
 autoload -Uz compinit
 DATE_CMD=date
 if type gdate >/dev/null 2>&1; then
