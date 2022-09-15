@@ -4,13 +4,13 @@
 
 - lineinfile:
     path: /etc/shells
-    line: /usr/local/bin/zsh
+    line: /opt/homebrew/bin/zsh
   become: true
 
 - user:
     name: "{{ ansible_facts.user_id }}"
     create_home: no
-    shell: /usr/local/bin/zsh
+    shell: /opt/homebrew/bin/zsh
     update_password: on_create
   become: true
 
