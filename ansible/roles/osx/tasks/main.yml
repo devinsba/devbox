@@ -29,5 +29,8 @@
 - homebrew:
     name: neovim
 
+- homebrew:
+    name: gpg2
+
 - homebrew_cask:
     name: iterm2

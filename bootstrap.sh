@@ -71,20 +71,10 @@ Linux)
 esac
 
 if ! lpass status | grep 'Logged in' > /dev/null; then
-  cat << EOF > /tmp/lpass_askpass
-#!/bin/bash
-
-echo -n "Enter \$@: " > /dev/stderr
-
-read -s answer
-echo \$answer
-EOF
-
-  chmod u+x /tmp/lpass_askpass
-  export LPASS_ASKPASS=/tmp/lpass_askpass
-
   mkdir -p "${HOME}/.local/share/lpass"
-  lpass login --trust "${LASTPASS_EMAIL_ADDRESS}"
+  echo "In another terminal run: lpass login --trust \"${LASTPASS_EMAIL_ADDRESS}\""
+  echo "-- Hit enter once this is done"
+  read
 fi
 mkdir -p "${HOME}/.ssh"
 lpass show --field="Private Key" ssh@personal > "${HOME}/.ssh/personal_key" && chmod 600 "${HOME}/.ssh/personal_key"
