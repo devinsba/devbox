@@ -45,10 +45,10 @@
     name: thoughtbot/formulae
 
 - homebrew_cask:
-    name: temurin8
+    name: zulu8
 
 - homebrew_cask:
-    name: temurin11
+    name: zulu11
 
 - homebrew_cask:
-    name: temurin17
+    name: zulu17
