@@ -37,3 +37,6 @@
 
 - homebrew_cask:
     name: iterm2
+
+- homebrew_cask:
+    name: jetbrains-toolbox
