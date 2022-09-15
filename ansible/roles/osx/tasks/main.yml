@@ -40,3 +40,15 @@
 
 - homebrew_cask:
     name: jetbrains-toolbox
+
+- homebrew_tap:
+    name: thoughtbot/formulae
+
+- homebrew_cask:
+    name: temurin8
+
+- homebrew_cask:
+    name: temurin11
+
+- homebrew_cask:
+    name: temurin17
