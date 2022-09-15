@@ -30,6 +30,9 @@
     name: neovim
 
 - homebrew:
+    name: coreutils
+
+- homebrew:
     name: gpg2
 
 - homebrew_cask:
