@@ -4,8 +4,23 @@
 
 - lineinfile:
     path: /etc/shells
+    line: /usr/local/bin/zsh
+  become: true
+  when: ansible_facts['machine'] == 'x86_64'
+
+- lineinfile:
+    path: /etc/shells
     line: /opt/homebrew/bin/zsh
   become: true
+  when: ansible_facts['machine'] == 'aarch64'
+
+- user:
+    name: "{{ ansible_facts.user_id }}"
+    create_home: no
+    shell: /usr/local/bin/zsh
+    update_password: on_create
+  become: true
+  when: ansible_facts['machine'] == 'x86_64'
 
 - user:
     name: "{{ ansible_facts.user_id }}"
@@ -13,6 +28,7 @@
     shell: /opt/homebrew/bin/zsh
     update_password: on_create
   become: true
+  when: ansible_facts['machine'] == 'aarch64'
 
 - homebrew_tap:
     name: thoughtbot/formulae
@@ -36,10 +52,16 @@
     name: gpg2
 
 - homebrew_cask:
+    name: google-chrome
+
+- homebrew_cask:
     name: iterm2
 
 - homebrew_cask:
     name: jetbrains-toolbox
+
+- homebrew_cask:
+    name: divvy
 
 - homebrew_tap:
     name: thoughtbot/formulae
