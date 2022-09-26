@@ -40,9 +40,13 @@ macos() {
     exit 1
   fi
 
+  sudo -v
+
   if ! brew commands > /dev/null 2>&1; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
+
+  sudo -v
 
   if [ "$(uname -m)" != "x86_64" ] ; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
