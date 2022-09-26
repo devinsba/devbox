@@ -63,6 +63,12 @@
 - homebrew_cask:
     name: divvy
 
+- homebrew_cask:
+    name: notion
+
+- homebrew_cask:
+    name: todoist
+
 - homebrew_tap:
     name: homebrew/cask-versions
 
@@ -74,3 +80,4 @@
 
 - homebrew_cask:
     name: zulu17
+
