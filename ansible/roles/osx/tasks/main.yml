@@ -64,7 +64,7 @@
     name: divvy
 
 - homebrew_tap:
-    name: thoughtbot/formulae
+    name: homebrew/cask-versions
 
 - homebrew_cask:
     name: zulu8
