@@ -1,5 +1,6 @@
 ---
-- homebrew:
+- name: Install zsh
+  homebrew:
     name: zsh
 
 - lineinfile:
@@ -51,33 +52,43 @@
 - homebrew:
     name: gpg2
 
-- homebrew_cask:
+- name: Install Google Chrome
+  homebrew_cask:
     name: google-chrome
 
-- homebrew_cask:
+- name: Install iTerm2
+  homebrew_cask:
     name: iterm2
 
-- homebrew_cask:
+- name: Install Jetbrains Toolbox
+  homebrew_cask:
     name: jetbrains-toolbox
 
-- homebrew_cask:
+- name: Install divvy
+  homebrew_cask:
     name: divvy
 
-- homebrew_cask:
+- name: Install notion
+  homebrew_cask:
     name: notion
 
-- homebrew_cask:
+- name: Install todoist
+  homebrew_cask:
     name: todoist
 
 - homebrew_tap:
     name: homebrew/cask-versions
 
-- homebrew_cask:
+- name: Install Java Zulu 8
+  homebrew_cask:
     name: zulu8
 
-- homebrew_cask:
+- name: Install Java Zulu 11
+  homebrew_cask:
     name: zulu11
 
-- homebrew_cask:
+- name: Install Java Zulu 17
+  homebrew_cask:
     name: zulu17
 
+- import_tasks: docker.yml

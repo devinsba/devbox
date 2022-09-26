@@ -1,0 +1,12 @@
+---
+- name: Install docker
+  homebrew_cask:
+    name: docker
+
+- name: Install kind
+  homebrew:
+    name: kind
+
+- name: Install helm
+  homebrew:
+    name: helm
