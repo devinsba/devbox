@@ -46,8 +46,6 @@ macos() {
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
 
-  sudo -v
-
   if [ "$(uname -m)" != "x86_64" ] ; then
     eval "$(/opt/homebrew/bin/brew shellenv)"
   fi
@@ -60,8 +58,6 @@ debian() {
   sudo apt-get upgrade -y
   sudo apt-get install -y git ansible lastpass-cli
 }
-
-sudo -v
 
 case $(uname) in
 Darwin)
