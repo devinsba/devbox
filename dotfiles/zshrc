@@ -11,6 +11,8 @@ DATE_CMD=date
 if type gdate >/dev/null 2>&1; then
     DATE_CMD=gdate
 fi
+
+[ ! -e "~/.zcompdump" ] && compinit -i
 if [ $($DATE_CMD +'%j') != $($DATE_CMD +'%j' -r ~/.zcompdump) ]; then
     compinit -i
 else
