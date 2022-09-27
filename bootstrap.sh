@@ -51,7 +51,6 @@ macos() {
   fi
 
   brew install git ansible lastpass-cli
-  wait
 }
 
 debian() {
@@ -73,6 +72,7 @@ Linux)
   ;;
 esac
 
+wait
 if ! lpass status | grep 'Logged in' > /dev/null; then
   mkdir -p "${HOME}/.local/share/lpass"
   echo "In another terminal run: lpass login --trust \"${LASTPASS_EMAIL_ADDRESS}\""
