@@ -3,6 +3,10 @@
   homebrew_cask:
     name: docker
 
+- name: Install kubernetes-cli
+  homebrew:
+    name: kubernetes-cli
+
 - name: Install kind
   homebrew:
     name: kind
