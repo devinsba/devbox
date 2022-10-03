@@ -52,9 +52,14 @@
 - homebrew:
     name: gpg2
 
+- stat:
+    path: "/Applications/Google Chrome.app"
+  register: CHROME_APP_DIR
+
 - name: Install Google Chrome
   homebrew_cask:
     name: google-chrome
+  when: CHROME_APP_DIR.stat.exists == false
 
 - name: Install iTerm2
   homebrew_cask:
