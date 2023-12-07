@@ -41,6 +41,9 @@
     name: antibody
 
 - homebrew:
+    name: fzf
+
+- homebrew:
     name: hub
 
 - homebrew:

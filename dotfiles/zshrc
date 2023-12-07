@@ -6,6 +6,11 @@ export DOTFILES_DIR="${HOME}/.local/opt/devbox/dotfiles"
 
 export EDITOR=nvim
 
+if type brew &>/dev/null
+then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+fi
+
 autoload -Uz compinit
 DATE_CMD=date
 if type gdate >/dev/null 2>&1; then
@@ -38,8 +43,6 @@ fi
 export PATH="${HOME}/.local/bin:${PATH}"
 [ -d "/snap/bin" ] && export PATH="${PATH}:/snap/bin"
 
-[ -s "${HOME}/.config/fzf/init.zsh" ] && source ${HOME}/.config/fzf/init.zsh
-
 if [[ -s "${HOME}/.zshrc_private" ]]; then
     source "${HOME}/.zshrc_private"
 fi
@@ -47,3 +50,8 @@ fi
 if [[ -s "${HOME}/.zshrc_local" ]]; then
     source "${HOME}/.zshrc_local"
 fi
+
+# google-cloud-sdk brew caveat
+source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
+

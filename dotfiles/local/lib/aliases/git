@@ -1,3 +1,4 @@
 alias gs="git status"
 alias gfrp="git fetch && git rebase && git push"
 alias gbc="hub sync && hub sync > /dev/null 2>&1 | grep deleted | cut -d ' ' -f 2 | xargs git branch -D"
+alias main="git checkout main || git checkout prod || git checkout master && hub sync"

@@ -8,9 +8,9 @@ ohmyzsh/ohmyzsh path:lib/theme-and-appearance.zsh
 ohmyzsh/ohmyzsh path:themes/jreese.zsh-theme
 
 ohmyzsh/ohmyzsh path:plugins/iterm2
-ohmyzsh/ohmyzsh path:plugins/ssh-agent
+
+joshskidmore/zsh-fzf-history-search
 
 zsh-users/zsh-autosuggestions
 zsh-users/zsh-completions
-zsh-users/zsh-history-substring-search
 zsh-users/zsh-syntax-highlighting

@@ -5,6 +5,7 @@
     - zsh
     - gnupg2
     - rcm
+    - fzf
     - unzip
     - zip
     - hub
