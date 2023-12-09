@@ -103,4 +103,8 @@
   homebrew_cask:
     name: zulu17
 
+- name: Install Java Zulu 21
+  homebrew_cask:
+    name: zulu21
+
 - import_tasks: docker.yml
