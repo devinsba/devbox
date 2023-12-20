@@ -4,6 +4,8 @@ function boxup() {
     (
         cd $DEVBOX_DIR
         git pull
+        cd "${DEVBOX_DIR}/ansible"
+        ansible-playbook -K -i inventory site.yml
         cd $PRIVATE_DEVBOX_DIR
         git pull
     )

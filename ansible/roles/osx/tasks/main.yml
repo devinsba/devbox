@@ -76,9 +76,14 @@
   homebrew_cask:
     name: visual-studio-code
 
+- stat:
+    path: "/Applications/Divvy.app"
+  register: DIVVY_APP_DIR
+
 - name: Install divvy
   homebrew_cask:
     name: divvy
+  when: DIVVY_APP_DIR.stat.exists == false
 
 - name: Install notion
   homebrew_cask:

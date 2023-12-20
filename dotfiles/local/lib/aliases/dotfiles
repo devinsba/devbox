@@ -4,6 +4,7 @@ function dfup() {
     (
         cd $DOTFILES_DIR
         git pull
+        rcup -vf
         antidote update
         update_antidote_plugin_cache
     )
