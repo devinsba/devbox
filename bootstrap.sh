@@ -83,6 +83,7 @@ ssh_key() {
     echo "-- Hit enter once this is done"
     read
   fi
+  eval $(op signin)
   mkdir -p "${HOME}/.ssh"
   op read --out-file "$HOME/.ssh/personal_key" "op://private/personal ssh key/private key?ssh-format=openssh" && chmod 600 "${HOME}/.ssh/personal_key"
   op read --out-file "$HOME/.ssh/personal_key.pub" "op://private/personal ssh key/public key"
