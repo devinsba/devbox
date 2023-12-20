@@ -37,12 +37,12 @@ if [[ -d "${ANTIDOTE_DIR}" ]]; then
     source "${ANTIDOTE_DIR}/antidote.zsh"
 fi
 
-if [[ -s "${HOME}/.config/antibody/plugins.zsh" ]]; then
-    source "${HOME}/.config/antibody/plugins.zsh"
+if [[ -s "${HOME}/.config/antidote/plugins.zsh" ]]; then
+    source "${HOME}/.config/antidote/plugins.zsh"
 else
     eval "$(antidote bundle devinsba/zsh-plugins)"
-    update_antibody_plugin_cache
-    source "${HOME}/.config/antibody/plugins.zsh"
+    update_antidote_plugin_cache
+    source "${HOME}/.config/antidote/plugins.zsh"
 fi
 
 export PATH="${HOME}/.local/bin:${PATH}"
