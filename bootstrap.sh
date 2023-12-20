@@ -2,6 +2,7 @@
 set -o xtrace
 
 DEVBOX_REPO="git@github.com:devinsba/devbox"
+DEVBOX_REPO_HTTP="http://github.com/devinsba/devbox"
 onePASSWORD_EMAIL_ADDRESS="badevins@gmail.com"
 
 get_linux_distro() {
@@ -71,9 +72,57 @@ debian() {
   sudo apt update && sudo apt install 1password-cli
 }
 
+freebsd() {
+  sudo pkg install git
+}
+
+ssh_key() {
+  wait
+  if ! op whoami | grep 'Email:' > /dev/null; then
+    echo "In another terminal run: op account add --address my.1password.com --email \"${onePASSWORD_EMAIL_ADDRESS}\""
+    echo "-- Hit enter once this is done"
+    read
+  fi
+  mkdir -p "${HOME}/.ssh"
+  op read --out-file "$HOME/.ssh/personal_key" "op://private/personal ssh key/private key?ssh-format=openssh" && chmod 600 "${HOME}/.ssh/personal_key"
+  op read --out-file "$HOME/.ssh/personal_key.pub" "op://private/personal ssh key/public key"
+
+  cat << EOF > $HOME/.ssh/config
+host github.com
+  HostName github.com
+  IdentityFile ~/.ssh/personal_key
+EOF
+}
+
+public_repo() {
+  mkdir -p "${HOME}/.local/opt"
+  if [ -d "${HOME}/.local/opt/devbox" ]; then
+    (
+      cd "${HOME}/.local/opt/devbox"
+      git pull
+    )
+  else
+    git clone "${DEVBOX_REPO}" "${HOME}/.local/opt/devbox"
+  fi
+}
+
+private_repo() {
+  if [ -d "${HOME}/.local/opt/devbox-private" ]; then
+    (
+      cd "${HOME}/.local/opt/devbox-private"
+      git pull
+    )
+  else
+    git clone "${DEVBOX_REPO}-private" "${HOME}/.local/opt/devbox-private"
+  fi
+}
+
 case $(uname) in
 Darwin)
   macos
+  ssh_key
+  public_repo
+  private_repo
   ;;
 Linux)
   case $(get_linux_distro) in
@@ -81,43 +130,16 @@ Linux)
     debian
     ;;
   esac
+  ssh_key
+  public_repo
+  private_repo
+  ;;
+FreeBSD)
+  freebsd
+  DEVBOX_REPO=$DEVBOX_REPO_HTTP
+  public_repo
   ;;
 esac
-
-wait
-if ! op whoami | grep 'Email:' > /dev/null; then
-  echo "In another terminal run: op account add --address my.1password.com --email \"${onePASSWORD_EMAIL_ADDRESS}\""
-  echo "-- Hit enter once this is done"
-  read
-fi
-mkdir -p "${HOME}/.ssh"
-op read --out-file "$HOME/.ssh/personal_key" "op://private/personal ssh key/private key?ssh-format=openssh" && chmod 600 "${HOME}/.ssh/personal_key"
-op read --out-file "$HOME/.ssh/personal_key.pub" "op://private/personal ssh key/public key"
-
-cat << EOF > $HOME/.ssh/config
-host github.com
-  HostName github.com
-  IdentityFile ~/.ssh/personal_key
-EOF
-
-# Clone repos
-mkdir -p "${HOME}/.local/opt"
-if [ -d "${HOME}/.local/opt/devbox" ]; then
-  (
-    cd "${HOME}/.local/opt/devbox"
-    git pull
-  )
-else
-  git clone "${DEVBOX_REPO}" "${HOME}/.local/opt/devbox"
-fi
-if [ -d "${HOME}/.local/opt/devbox-private" ]; then
-  (
-    cd "${HOME}/.local/opt/devbox-private"
-    git pull
-  )
-else
-  git clone "${DEVBOX_REPO}-private" "${HOME}/.local/opt/devbox-private"
-fi
 
 (
   cd "${HOME}/.local/opt/devbox/ansible"
