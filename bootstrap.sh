@@ -2,7 +2,7 @@
 set -o xtrace
 
 DEVBOX_REPO="git@github.com:devinsba/devbox"
-LASTPASS_EMAIL_ADDRESS="badevins@gmail.com"
+onePASSWORD_EMAIL_ADDRESS="badevins@gmail.com"
 
 get_linux_distro() {
   if [ -f /etc/os-release ]; then
@@ -56,7 +56,19 @@ macos() {
 debian() {
   sudo apt-get update
   sudo apt-get upgrade -y
-  sudo apt-get install -y git ansible lastpass-cli
+  sudo apt-get install -y git ansible
+
+  curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+    sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
+  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/$(dpkg --print-architecture) stable main" | \
+    sudo tee /etc/apt/sources.list.d/1password.list
+  sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22/
+  curl -sS https://downloads.1password.com/linux/debian/debsig/1password.pol | \
+    sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol
+  sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22
+  curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
+    sudo gpg --dearmor --output /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg
+  sudo apt update && sudo apt install 1password-cli
 }
 
 case $(uname) in
@@ -73,15 +85,14 @@ Linux)
 esac
 
 wait
-if ! lpass status | grep 'Logged in' > /dev/null; then
-  mkdir -p "${HOME}/.local/share/lpass"
-  echo "In another terminal run: lpass login --trust \"${LASTPASS_EMAIL_ADDRESS}\""
+if ! op whoami | grep 'Email:' > /dev/null; then
+  echo "In another terminal run: op account add --address my.1password.com --email \"${onePASSWORD_EMAIL_ADDRESS}\""
   echo "-- Hit enter once this is done"
   read
 fi
 mkdir -p "${HOME}/.ssh"
-lpass show --field="Private Key" ssh@personal > "${HOME}/.ssh/personal_key" && chmod 600 "${HOME}/.ssh/personal_key"
-lpass show --field="Public Key" ssh@personal > "${HOME}/.ssh/personal_key.pub"
+op read --out-file "$HOME/.ssh/personal_key" "op://private/personal ssh key/private key?ssh-format=openssh" && chmod 600 "${HOME}/.ssh/personal_key"
+op read --out-file "$HOME/.ssh/personal_key.pub" "op://private/personal ssh key/public key"
 
 cat << EOF > $HOME/.ssh/config
 host github.com
