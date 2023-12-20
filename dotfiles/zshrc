@@ -3,6 +3,7 @@ export XDG_CONFIG_HOME="${HOME}/.config"
 export DEVBOX_DIR="${HOME}/.local/opt/devbox"
 export PRIVATE_DEVBOX_DIR="${HOME}/.local/opt/devbox-private"
 export DOTFILES_DIR="${HOME}/.local/opt/devbox/dotfiles"
+export ANTIDOTE_DIR="${HOME}/.local/opt/antidote"
 
 export EDITOR=nvim
 
@@ -32,10 +33,14 @@ for include_file in $(ls ${HOME}/.local/lib/zsh-includes/); do
     source "${HOME}/.local/lib/zsh-includes/${include_file}"
 done
 
+if [[ -d "${ANTIDOTE_DIR}" ]]; then
+    source "${ANTIDOTE_DIR}/antidote.zsh"
+fi
+
 if [[ -s "${HOME}/.config/antibody/plugins.zsh" ]]; then
     source "${HOME}/.config/antibody/plugins.zsh"
 else
-    eval "$(antibody bundle devinsba/zsh-plugins)"
+    eval "$(antidote bundle devinsba/zsh-plugins)"
     update_antibody_plugin_cache
     source "${HOME}/.config/antibody/plugins.zsh"
 fi
@@ -52,6 +57,8 @@ if [[ -s "${HOME}/.zshrc_local" ]]; then
 fi
 
 # google-cloud-sdk brew caveat
-source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
-source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
+if [[ -d "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/" ]]; then
+    source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+    source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
+fi
 

@@ -1,0 +1,12 @@
+---
+- stat:
+    path: "{{ lookup('env','HOME') }}/.local/opt/antidote"
+  register: ANTIDOTE_DIR
+
+- git:
+    repo: https://github.com/mattmc3/antidote.git
+    dest: "{{ lookup('env','HOME') }}/.local/opt/antidote"
+  when: ANTIDOTE_DIR.stat.exists == false
+
+- shell: |
+    cd {{ lookup('env','HOME') }}/.local/opt/antidote
