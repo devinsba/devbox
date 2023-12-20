@@ -38,9 +38,6 @@
     name: rcm
 
 - homebrew:
-    name: antibody
-
-- homebrew:
     name: fzf
 
 - homebrew:

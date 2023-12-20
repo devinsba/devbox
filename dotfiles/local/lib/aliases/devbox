@@ -1,11 +1,19 @@
 alias cdbox="cd $DEVBOX_DIR"
 
+function _box_ansible() {
+    (
+        # set -o xtrace
+        cd "${DEVBOX_DIR}/ansible"
+        ansible-playbook -K -i inventory site.yml
+        # set +o xtrace
+    )
+}
+
 function boxup() {
     (
         cd $DEVBOX_DIR
         git pull
-        cd "${DEVBOX_DIR}/ansible"
-        ansible-playbook -K -i inventory site.yml
+        _box_ansible
         cd $PRIVATE_DEVBOX_DIR
         git pull
     )
