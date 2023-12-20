@@ -4,7 +4,7 @@ function dfup() {
     (
         cd $DOTFILES_DIR
         git pull
-        antibody update
-        update_antibody_plugin_cache
+        antidote update
+        update_antidote_plugin_cache
     )
 }
