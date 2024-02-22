@@ -127,7 +127,7 @@ Darwin)
   ;;
 Linux)
   case $(get_linux_distro) in
-  Debian | "Debian GNU/Linux" | Ubuntu | "Pop!_OS")
+  Debian | "Debian GNU/Linux" | Ubuntu | "Pop!_OS" | "KDE neon")
     debian
     ;;
   esac
