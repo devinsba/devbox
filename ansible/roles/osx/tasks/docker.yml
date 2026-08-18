@@ -1,7 +1,15 @@
 ---
-- name: Install docker
+- name: Install rancher desktop
   homebrew_cask:
+    name: rancher
+
+- name: Install docker-cli
+  homebrew:
     name: docker
+
+- name: Install docker-compose
+  homebrew:
+    name: docker-compose
 
 - name: Install kubernetes-cli
   homebrew:
