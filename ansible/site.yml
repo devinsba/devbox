@@ -2,10 +2,15 @@
   roles:
     - role: osx
       when: ansible_facts['os_family'] == 'Darwin'
+      tags: [osx]
     - role: debian
       when: ansible_facts['os_family'] == 'Debian'
+      tags: [debian]
     - role: antidote
-    - role: nvm
-    - role: pyenv
-    - role: rvm
+      tags: [antidote]
+    - role: fnm
+      tags: [fnm]
     - role: sdkman
+      tags: [sdkman]
+    - role: uv
+      tags: [uv]

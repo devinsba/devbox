@@ -1,0 +1,8 @@
+---
+- stat:
+    path: "{{ lookup('env','HOME') }}/.local/bin/fnm"
+  register: FNM_BIN
+
+- shell: |
+    curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "{{ lookup('env','HOME') }}/.local/bin" --skip-shell
+  when: FNM_BIN.stat.exists == false

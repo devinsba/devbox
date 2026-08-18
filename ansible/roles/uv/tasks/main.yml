@@ -1,0 +1,8 @@
+---
+- stat:
+    path: "{{ lookup('env','HOME') }}/.local/bin/uv"
+  register: UV_BIN
+
+- shell: |
+    curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="{{ lookup('env','HOME') }}/.local/bin" INSTALLER_NO_MODIFY_PATH=1 sh
+  when: UV_BIN.stat.exists == false
