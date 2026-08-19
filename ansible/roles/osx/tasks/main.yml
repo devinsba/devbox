@@ -3,6 +3,10 @@
   homebrew:
     name: zsh
 
+- name: Install bash
+  homebrew:
+    name: bash
+
 - lineinfile:
     path: /etc/shells
     line: /usr/local/bin/zsh
