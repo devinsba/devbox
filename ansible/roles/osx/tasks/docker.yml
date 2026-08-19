@@ -7,6 +7,10 @@
   homebrew:
     name: docker
 
+- name: Install docker-credential-helper
+  homebrew:
+    name: docker-credential-helper
+
 - name: Install docker-compose
   homebrew:
     name: docker-compose
