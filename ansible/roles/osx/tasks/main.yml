@@ -86,31 +86,4 @@
     name: divvy
   when: DIVVY_APP_DIR.stat.exists == false
 
-- name: Install notion
-  homebrew_cask:
-    name: notion
-
-- name: Install todoist
-  homebrew_cask:
-    name: todoist
-
-- homebrew_tap:
-    name: homebrew/cask-versions
-
-- name: Install Java Zulu 8
-  homebrew_cask:
-    name: zulu8
-
-- name: Install Java Zulu 11
-  homebrew_cask:
-    name: zulu11
-
-- name: Install Java Zulu 17
-  homebrew_cask:
-    name: zulu17
-
-- name: Install Java Zulu 21
-  homebrew_cask:
-    name: zulu21
-
 - import_tasks: docker.yml
