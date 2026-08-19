@@ -62,7 +62,7 @@ macos() {
 debian() {
   sudo apt-get update
   sudo apt-get upgrade -y
-  sudo apt-get install -y git ansible
+  sudo apt-get install -y git ansible gnupg
 
   curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
     sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
