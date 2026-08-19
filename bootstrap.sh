@@ -96,19 +96,23 @@ ssh_key() {
     ;;
   esac
 
-  echo "In 1Password, enable Settings > Developer > 'Use the SSH Agent', then toggle 'Use for SSH' on your personal ssh key item."
-  echo "-- Hit enter once this is done"
-  read _ < /dev/tty
+  if [ -S "${AGENT_SOCK}" ]; then
+    echo "1Password SSH agent socket already found at ${AGENT_SOCK}, skipping setup."
+  else
+    echo "In 1Password, enable Settings > Developer > 'Use the SSH Agent', then toggle 'Use for SSH' on your personal ssh key item."
+    echo "-- Hit enter once this is done"
+    read _ < /dev/tty
 
-  if [ ! -S "${AGENT_SOCK}" ] && [ "$(uname)" = "Darwin" ]; then
-    FOUND_CONTAINER=$(find "${HOME}/Library/Group Containers" -maxdepth 1 -iname '*1password*' 2>/dev/null | head -n1)
-    if [ -n "${FOUND_CONTAINER}" ] && [ -S "${FOUND_CONTAINER}/t/agent.sock" ]; then
-      AGENT_SOCK="${FOUND_CONTAINER}/t/agent.sock"
+    if [ ! -S "${AGENT_SOCK}" ] && [ "$(uname)" = "Darwin" ]; then
+      FOUND_CONTAINER=$(find "${HOME}/Library/Group Containers" -maxdepth 1 -iname '*1password*' 2>/dev/null | head -n1)
+      if [ -n "${FOUND_CONTAINER}" ] && [ -S "${FOUND_CONTAINER}/t/agent.sock" ]; then
+        AGENT_SOCK="${FOUND_CONTAINER}/t/agent.sock"
+      fi
     fi
-  fi
 
-  if [ ! -S "${AGENT_SOCK}" ]; then
-    echo "Warning: no socket found at ${AGENT_SOCK} -- ssh will not authenticate until the 1Password SSH Agent is actually running there."
+    if [ ! -S "${AGENT_SOCK}" ]; then
+      echo "Warning: no socket found at ${AGENT_SOCK} -- ssh will not authenticate until the 1Password SSH Agent is actually running there."
+    fi
   fi
 
   mkdir -p "${HOME}/.ssh"
