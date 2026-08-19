@@ -56,6 +56,13 @@
 - homebrew:
     name: gpg2
 
+- homebrew_tap:
+    name: keith/formulae
+    trust: true
+
+- homebrew:
+    name: zap
+
 - stat:
     path: "/Applications/Google Chrome.app"
   register: CHROME_APP_DIR
