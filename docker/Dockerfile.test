@@ -1,0 +1,19 @@
+FROM debian:bookworm-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ansible \
+        sudo \
+        git \
+        curl \
+        ca-certificates \
+        gnupg \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m -s /bin/bash tester \
+    && echo "tester ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/tester
+
+USER tester
+WORKDIR /devbox/ansible
+
+ENTRYPOINT ["ansible-playbook", "-i", "inventory", "site.yml"]
+CMD ["--tags", "fnm,uv"]

@@ -1,9 +1,14 @@
 #!/bin/sh
 set -o xtrace
 
-DEVBOX_REPO="git@github.com:devinsba/devbox"
-DEVBOX_REPO_HTTP="http://github.com/devinsba/devbox"
-onePASSWORD_EMAIL_ADDRESS="badevins@gmail.com"
+DEVBOX_REPO="${DEVBOX_REPO:-git@github.com:devinsba/devbox}"
+DEVBOX_REPO_HTTP="${DEVBOX_REPO_HTTP:-http://github.com/devinsba/devbox}"
+
+# When set, skips the steps that need real secrets/network access a
+# container can't have (1Password ssh-key pull, cloning from GitHub) and
+# assumes ${HOME}/.local/opt/devbox[-private] are already populated, and
+# that sudo doesn't need a password. See test-bootstrap.sh.
+DEVBOX_LOCAL_TEST="${DEVBOX_LOCAL_TEST:-}"
 
 get_linux_distro() {
   if [ -f /etc/os-release ]; then
@@ -77,25 +82,48 @@ freebsd() {
 }
 
 ssh_key() {
-  wait
-  if ! op whoami | grep 'Email:' > /dev/null; then
-    echo "In another terminal run: op account add --address my.1password.com --email \"${onePASSWORD_EMAIL_ADDRESS}\""
-    echo "-- Hit enter once this is done"
-    read
+  if [ -n "${DEVBOX_LOCAL_TEST}" ]; then
+    echo "DEVBOX_LOCAL_TEST set, skipping ssh_key"
+    return
   fi
-  eval $(op signin)
-  mkdir -p "${HOME}/.ssh"
-  op read --out-file "$HOME/.ssh/personal_key" "op://private/personal ssh key/private key?ssh-format=openssh" && chmod 600 "${HOME}/.ssh/personal_key"
-  op read --out-file "$HOME/.ssh/personal_key.pub" "op://private/personal ssh key/public key"
 
-  cat << EOF > $HOME/.ssh/config
-host github.com
-  HostName github.com
-  IdentityFile ~/.ssh/personal_key
+  case $(uname) in
+  Darwin)
+    AGENT_SOCK="${HOME}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+    ;;
+  *)
+    AGENT_SOCK="${HOME}/.1password/agent.sock"
+    ;;
+  esac
+
+  echo "In 1Password, enable Settings > Developer > 'Use the SSH Agent', then toggle 'Use for SSH' on your personal ssh key item."
+  echo "-- Hit enter once this is done"
+  read _
+
+  if [ ! -S "${AGENT_SOCK}" ] && [ "$(uname)" = "Darwin" ]; then
+    FOUND_CONTAINER=$(find "${HOME}/Library/Group Containers" -maxdepth 1 -iname '*1password*' 2>/dev/null | head -n1)
+    if [ -n "${FOUND_CONTAINER}" ] && [ -S "${FOUND_CONTAINER}/t/agent.sock" ]; then
+      AGENT_SOCK="${FOUND_CONTAINER}/t/agent.sock"
+    fi
+  fi
+
+  if [ ! -S "${AGENT_SOCK}" ]; then
+    echo "Warning: no socket found at ${AGENT_SOCK} -- ssh will not authenticate until the 1Password SSH Agent is actually running there."
+  fi
+
+  mkdir -p "${HOME}/.ssh"
+  cat << EOF > "$HOME/.ssh/config"
+host *
+  IdentityAgent "${AGENT_SOCK}"
 EOF
 }
 
 public_repo() {
+  if [ -n "${DEVBOX_LOCAL_TEST}" ]; then
+    echo "DEVBOX_LOCAL_TEST set, skipping public_repo sync"
+    return
+  fi
+
   mkdir -p "${HOME}/.local/opt"
   if [ -d "${HOME}/.local/opt/devbox" ]; then
     (
@@ -108,6 +136,11 @@ public_repo() {
 }
 
 private_repo() {
+  if [ -n "${DEVBOX_LOCAL_TEST}" ]; then
+    echo "DEVBOX_LOCAL_TEST set, skipping private_repo sync"
+    return
+  fi
+
   if [ -d "${HOME}/.local/opt/devbox-private" ]; then
     (
       cd "${HOME}/.local/opt/devbox-private"
@@ -144,7 +177,11 @@ esac
 
 (
   cd "${HOME}/.local/opt/devbox/ansible"
-  ansible-playbook -K -i inventory site.yml
+  if [ -n "${DEVBOX_LOCAL_TEST}" ]; then
+    ansible-playbook -i inventory site.yml
+  else
+    ansible-playbook -K -i inventory site.yml
+  fi
 )
 
 # rcm

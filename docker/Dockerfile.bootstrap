@@ -1,0 +1,21 @@
+FROM debian:bookworm-slim
+
+# Deliberately minimal: bootstrap.sh's debian() function is responsible for
+# installing git/ansible/etc itself, and this image should look like a bare
+# fresh machine so that step actually gets exercised.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        sudo \
+        curl \
+        ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m -s /bin/bash tester \
+    && echo "tester ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/tester
+
+COPY docker/bootstrap-entrypoint.sh /usr/local/bin/bootstrap-entrypoint.sh
+RUN chmod +x /usr/local/bin/bootstrap-entrypoint.sh
+
+USER tester
+WORKDIR /home/tester
+
+ENTRYPOINT ["/usr/local/bin/bootstrap-entrypoint.sh"]
