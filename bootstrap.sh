@@ -98,7 +98,7 @@ ssh_key() {
 
   echo "In 1Password, enable Settings > Developer > 'Use the SSH Agent', then toggle 'Use for SSH' on your personal ssh key item."
   echo "-- Hit enter once this is done"
-  read _
+  read _ < /dev/tty
 
   if [ ! -S "${AGENT_SOCK}" ] && [ "$(uname)" = "Darwin" ]; then
     FOUND_CONTAINER=$(find "${HOME}/Library/Group Containers" -maxdepth 1 -iname '*1password*' 2>/dev/null | head -n1)
