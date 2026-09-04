@@ -37,6 +37,7 @@
 
 - homebrew_tap:
     name: thoughtbot/formulae
+    trust: true
 
 - homebrew:
     name: rcm
@@ -61,7 +62,7 @@
     trust: true
 
 - homebrew:
-    name: zap
+    name: keith/formulae/zap
 
 - stat:
     path: "/Applications/Google Chrome.app"
