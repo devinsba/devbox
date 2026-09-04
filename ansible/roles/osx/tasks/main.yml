@@ -46,6 +46,9 @@
     name: fzf
 
 - homebrew:
+    name: direnv
+
+- homebrew:
     name: hub
 
 - homebrew:

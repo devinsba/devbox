@@ -10,6 +10,7 @@
     - zip
     - hub
     - neovim
+    - direnv
   become: true
 
 - user:
