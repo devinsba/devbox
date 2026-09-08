@@ -11,25 +11,20 @@
     - hub
     - neovim
     - direnv
-  become: true
-
-- name: Ensure apt keyrings directory exists
-  file:
-    path: /etc/apt/keyrings
-    state: directory
-    mode: "0755"
-  become: true
-
-- name: Add GitHub CLI apt key
-  apt_key:
-    url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
-    keyring: /etc/apt/keyrings/githubcli-archive-keyring.gpg
+    - python3-debian
   become: true
 
 - name: Add GitHub CLI apt repository
-  apt_repository:
-    repo: "deb [arch={{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }} signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main"
-    filename: github-cli
+  deb822_repository:
+    name: github-cli
+    types: deb
+    uris: https://cli.github.com/packages
+    suites: stable
+    components: main
+    architectures: "{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'amd64' }}"
+    signed_by: https://cli.github.com/packages/githubcli-archive-keyring.gpg
+    enabled: true
+    state: present
   become: true
 
 - name: Install GitHub CLI
