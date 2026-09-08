@@ -52,6 +52,9 @@
     name: hub
 
 - homebrew:
+    name: gh
+
+- homebrew:
     name: neovim
 
 - homebrew:
