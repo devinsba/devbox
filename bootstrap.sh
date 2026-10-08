@@ -2,7 +2,18 @@
 set -o xtrace
 
 DEVBOX_REPO="${DEVBOX_REPO:-git@github.com:devinsba/devbox}"
-DEVBOX_REPO_HTTP="${DEVBOX_REPO_HTTP:-http://github.com/devinsba/devbox}"
+DEVBOX_REPO_HTTP="${DEVBOX_REPO_HTTP:-https://github.com/devinsba/devbox}"
+
+# DEVBOX_MODE=work is for work machines: no personal 1Password, so the repo is
+# cloned anonymously over HTTPS (public repo, no auth), the 1Password ssh
+# agent setup is skipped, and devbox-private is neither cloned nor used.
+DEVBOX_MODE="${DEVBOX_MODE:-}"
+if [ "${DEVBOX_MODE}" = "work" ]; then
+  DEVBOX_REPO="${DEVBOX_REPO_HTTP}"
+elif [ -n "${DEVBOX_MODE}" ]; then
+  echo "Unknown DEVBOX_MODE '${DEVBOX_MODE}' (supported: work)" >&2
+  exit 1
+fi
 
 # When set, skips the steps that need real secrets/network access a
 # container can't have (1Password ssh-key pull, cloning from GitHub) and
@@ -64,6 +75,10 @@ debian() {
   sudo apt-get upgrade -y
   sudo apt-get install -y git ansible gnupg
 
+  if [ "${DEVBOX_MODE}" = "work" ]; then
+    return
+  fi
+
   curl -sS https://downloads.1password.com/linux/keys/1password.asc | \
     sudo gpg --dearmor --output /usr/share/keyrings/1password-archive-keyring.gpg
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/$(dpkg --print-architecture) stable main" | \
@@ -84,6 +99,11 @@ freebsd() {
 ssh_key() {
   if [ -n "${DEVBOX_LOCAL_TEST}" ]; then
     echo "DEVBOX_LOCAL_TEST set, skipping ssh_key"
+    return
+  fi
+
+  if [ "${DEVBOX_MODE}" = "work" ]; then
+    echo "DEVBOX_MODE=work, skipping ssh_key"
     return
   fi
 
@@ -145,6 +165,11 @@ private_repo() {
     return
   fi
 
+  if [ "${DEVBOX_MODE}" = "work" ]; then
+    echo "DEVBOX_MODE=work, skipping private_repo sync"
+    return
+  fi
+
   if [ -d "${HOME}/.local/opt/devbox-private" ]; then
     (
       cd "${HOME}/.local/opt/devbox-private"
@@ -181,15 +206,24 @@ esac
 
 (
   cd "${HOME}/.local/opt/devbox/ansible"
+  EXTRA_VARS=""
+  if [ "${DEVBOX_MODE}" = "work" ]; then
+    EXTRA_VARS="-e devbox_work_mode=true"
+  fi
+  # EXTRA_VARS is intentionally unquoted so it splits into flag + value
   if [ -n "${DEVBOX_LOCAL_TEST}" ]; then
-    ansible-playbook -i inventory site.yml
+    ansible-playbook -i inventory ${EXTRA_VARS} site.yml
   else
-    ansible-playbook -K -i inventory site.yml
+    ansible-playbook -K -i inventory ${EXTRA_VARS} site.yml
   fi
 )
 
 # rcm
-echo "DOTFILES_DIRS=\"${HOME}/.local/opt/devbox/dotfiles ${HOME}/.local/opt/devbox-private/dotfiles\"" > "${HOME}/.rcrc"
+if [ "${DEVBOX_MODE}" = "work" ]; then
+  echo "DOTFILES_DIRS=\"${HOME}/.local/opt/devbox/dotfiles\"" > "${HOME}/.rcrc"
+else
+  echo "DOTFILES_DIRS=\"${HOME}/.local/opt/devbox/dotfiles ${HOME}/.local/opt/devbox-private/dotfiles\"" > "${HOME}/.rcrc"
+fi
 echo "TAGS=\"$(uname)\"" >> "${HOME}/.rcrc"
 rcup -vf
 

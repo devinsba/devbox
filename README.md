@@ -22,6 +22,17 @@ This only exercises the OS-agnostic roles (tags match `ansible/site.yml`:
 casks, `/etc/shells`, login shell changes) can't be tested this way since
 it's macOS-only — review it by reading the diff instead.
 
+## Work mode
+
+On machines without your personal 1Password, set `DEVBOX_MODE=work`. The
+repo is cloned anonymously over HTTPS (no GitHub auth needed), the 1Password ssh agent setup is skipped, and
+`devbox-private` is not cloned or added to `DOTFILES_DIRS`. The `osx` role also skips all
+Homebrew casks (Chrome, iTerm2, JetBrains Toolbox, VS Code, Divvy, Rancher Desktop).
+
+```
+curl -fsSL https://raw.githubusercontent.com/devinsba/devbox/master/bootstrap.sh | DEVBOX_MODE=work sh
+```
+
 ## Testing bootstrap.sh
 
 Requires Docker. `test-bootstrap.sh` runs bootstrap.sh's Linux path

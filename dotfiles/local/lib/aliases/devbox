@@ -14,7 +14,9 @@ function boxup() {
         cd $DEVBOX_DIR
         git pull
         _box_ansible
-        cd $PRIVATE_DEVBOX_DIR
-        git pull
+        if [ -d "$PRIVATE_DEVBOX_DIR" ]; then
+            cd $PRIVATE_DEVBOX_DIR
+            git pull
+        fi
     )
 }

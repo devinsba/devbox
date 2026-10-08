@@ -77,19 +77,24 @@
 - name: Install Google Chrome
   homebrew_cask:
     name: google-chrome
-  when: CHROME_APP_DIR.stat.exists == false
+  when:
+    - CHROME_APP_DIR.stat.exists == false
+    - not (devbox_work_mode | default(false) | bool)
 
 - name: Install iTerm2
   homebrew_cask:
     name: iterm2
+  when: not (devbox_work_mode | default(false) | bool)
 
 - name: Install Jetbrains Toolbox
   homebrew_cask:
     name: jetbrains-toolbox
+  when: not (devbox_work_mode | default(false) | bool)
 
 - name: Install VS Code
   homebrew_cask:
     name: visual-studio-code
+  when: not (devbox_work_mode | default(false) | bool)
 
 - stat:
     path: "/Applications/Divvy.app"
@@ -98,6 +103,8 @@
 - name: Install divvy
   homebrew_cask:
     name: divvy
-  when: DIVVY_APP_DIR.stat.exists == false
+  when:
+    - DIVVY_APP_DIR.stat.exists == false
+    - not (devbox_work_mode | default(false) | bool)
 
 - import_tasks: docker.yml
