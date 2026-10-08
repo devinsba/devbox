@@ -67,7 +67,7 @@ macos() {
     eval "$(/opt/homebrew/bin/brew shellenv)"
   fi
 
-  brew install git ansible lastpass-cli
+  brew install git ansible
 }
 
 debian() {
