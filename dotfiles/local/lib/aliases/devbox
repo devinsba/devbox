@@ -4,7 +4,11 @@ function _box_ansible() {
     (
         # set -o xtrace
         cd "${DEVBOX_DIR}/ansible"
-        ansible-playbook -K -i inventory site.yml
+        local extra_vars=()
+        if [ "${DEVBOX_MODE}" = "work" ]; then
+            extra_vars=(-e devbox_work_mode=true)
+        fi
+        ansible-playbook -K -i inventory "${extra_vars[@]}" site.yml
         # set +o xtrace
     )
 }
@@ -14,7 +18,7 @@ function boxup() {
         cd $DEVBOX_DIR
         git pull
         _box_ansible
-        if [ -d "$PRIVATE_DEVBOX_DIR" ]; then
+        if [ "${DEVBOX_MODE}" != "work" ] && [ -d "$PRIVATE_DEVBOX_DIR" ]; then
             cd $PRIVATE_DEVBOX_DIR
             git pull
         fi
