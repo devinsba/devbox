@@ -14,3 +14,5 @@
       tags: [sdkman]
     - role: uv
       tags: [uv]
+    - role: pyenv
+      tags: [pyenv]
