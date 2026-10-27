@@ -1,4 +1,5 @@
 export XDG_CONFIG_HOME="${HOME}/.config"
+export XDG_DATA_HOME="${HOME}/.local/share"
 
 export DEVBOX_DIR="${HOME}/.local/opt/devbox"
 export PRIVATE_DEVBOX_DIR="${HOME}/.local/opt/devbox-private"
@@ -7,23 +8,19 @@ export ANTIDOTE_DIR="${HOME}/.local/opt/antidote"
 
 export EDITOR=nvim
 
+# Keep fpath entries unique so re-sourcing this file or plugins adding the
+# same completion dir twice doesn't grow it; the first occurrence wins.
+typeset -U fpath
+
 if type brew &>/dev/null
 then
-  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+  fpath=( "$(brew --prefix)/share/zsh/site-functions" $fpath )
 fi
 
-autoload -Uz compinit
-DATE_CMD=date
-if type gdate >/dev/null 2>&1; then
-    DATE_CMD=gdate
-fi
-
-[ ! -e "~/.zcompdump" ] && compinit -i
-if [ $($DATE_CMD +'%j') != $($DATE_CMD +'%j' -r ~/.zcompdump) ]; then
-    compinit -i
-else
-    compinit -C -i
-fi
+# Queue compdef calls made before compinit runs (e.g. uv's completion script);
+# they're replayed once compinit is loaded below.
+typeset -ga _deferred_compdefs
+compdef() { _deferred_compdefs+=("${(j: :)${(q)@}}") }
 
 for alias_file in $(ls ${HOME}/.local/lib/aliases/); do
     source "${HOME}/.local/lib/aliases/${alias_file}"
@@ -45,6 +42,24 @@ else
     source "${HOME}/.config/antidote/plugins.zsh"
 fi
 
+autoload -Uz compinit
+DATE_CMD=date
+if type gdate >/dev/null 2>&1; then
+    DATE_CMD=gdate
+fi
+
+[ ! -e "~/.zcompdump" ] && compinit -i
+if [ $($DATE_CMD +'%j') != $($DATE_CMD +'%j' -r ~/.zcompdump) ]; then
+    compinit -i
+else
+    compinit -C -i
+fi
+
+for deferred_compdef in ${_deferred_compdefs}; do
+    eval "compdef ${deferred_compdef}"
+done
+unset _deferred_compdefs deferred_compdef
+
 export PATH="${HOME}/.local/bin:${PATH}"
 [ -d "/snap/bin" ] && export PATH="${PATH}:/snap/bin"
 
@@ -56,20 +71,7 @@ if [[ -s "${HOME}/.zshrc_local" ]]; then
     source "${HOME}/.zshrc_local"
 fi
 
-# google-cloud-sdk brew caveat
-if [[ -d "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/" ]]; then
-    source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
-    source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
-fi
-
 
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
 export PATH="/Users/brian/.rd/bin:$PATH"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
-
-export JAVA_HOME=$(sdk home java 21.0.12+1.1-tem)
-
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/brian/.lmstudio/bin"
-# End of LM Studio CLI section
-
