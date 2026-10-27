@@ -62,3 +62,14 @@ if [[ -d "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/" ]]; 
     source "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
 fi
 
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/brian/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+
+export JAVA_HOME=$(sdk home java 21.0.12+1.1-tem)
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/brian/.lmstudio/bin"
+# End of LM Studio CLI section
+
