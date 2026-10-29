@@ -10,6 +10,8 @@
       tags: [antidote]
     - role: fnm
       tags: [fnm]
+    - role: pnpm
+      tags: [pnpm]
     - role: sdkman
       tags: [sdkman]
     - role: uv

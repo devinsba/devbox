@@ -1,0 +1,26 @@
+---
+- name: Install pnpm via Homebrew
+  homebrew:
+    name: pnpm
+  when: ansible_facts['os_family'] == 'Darwin'
+
+- stat:
+    path: "{{ lookup('env','HOME') }}/.local/bin/pnpm"
+  register: PNPM_BIN
+  when: ansible_facts['os_family'] != 'Darwin'
+
+- shell: |
+    curl -fsSL https://get.pnpm.io/install.sh | env PNPM_HOME="{{ lookup('env','HOME') }}/.local/bin" sh -
+  when:
+    - ansible_facts['os_family'] != 'Darwin'
+    - PNPM_BIN.stat.exists == false
+
+- name: Configure pnpm directories
+  shell: pnpm config set {{ item.key }} "{{ item.value }}" --global
+  loop:
+    - key: global-bin-dir
+      value: "{{ lookup('env','HOME') }}/.local/bin"
+    - key: store-dir
+      value: "{{ lookup('env','HOME') }}/.local/opt/pnpm/store"
+  environment:
+    PATH: "{{ lookup('env','HOME') }}/.local/bin:{{ lookup('env','PATH') }}"
